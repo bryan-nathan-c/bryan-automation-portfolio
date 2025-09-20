@@ -3,6 +3,11 @@ name: CI Automation Tests
 on:
   workflow_dispatch:
   pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
 
 jobs:
   run-tests:
@@ -25,31 +30,43 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run Web UI tests
-        run: ./gradlew runWebTests -Dcucumber.filter.tags="@web"
+        run: |
+          ./gradlew runWebTests \
+            -Dcucumber.filter.tags="@web" \
+            -Dcucumber.plugin=html:build/reports/cucumber/web/html \
+            -Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json
 
       - name: Run API tests
-        run: ./gradlew runApiTests -Dcucumber.filter.tags="@api"
+        run: |
+          ./gradlew runApiTests \
+            -Dcucumber.filter.tags="@api" \
+            -Dcucumber.plugin=html:build/reports/cucumber/api/html \
+            -Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json
 
-      - name: Generate Cucumber reports
-        run: ./gradlew test --warning-mode all
-
-      - name: Upload Web test report
+      - name: Upload Web HTML report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: web-report
-          path: build/reports/cucumber/html/index.html
+          name: web-html-report
+          path: build/reports/cucumber/web/html/index.html
 
-      - name: Upload API test report
+      - name: Upload Web JSON report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: api-report
-          path: build/reports/cucumber/html/index.html
+          name: web-json-report
+          path: build/reports/cucumber/web/json/cucumber.json
 
-      - name: Upload Cucumber JSON report
+      - name: Upload API HTML report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cucumber-json
-          path: build/reports/cucumber/json/cucumber.json
+          name: api-html-report
+          path: build/reports/cucumber/api/html/index.html
+
+      - name: Upload API JSON report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-json-report
+          path: build/reports/cucumber/api/json/cucumber.json
