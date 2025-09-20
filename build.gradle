@@ -10,15 +10,15 @@ repositories {
 }
 
 dependencies {
-    // Cucumber core & JUnit Platform binding
+    // Cucumber core & JUnit Platform integration
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
-    // cucumber-junit tidak diperlukan lagi (hindari duplikasi)
+    // (cucumber-junit removed to avoid JUnit4 runner imports)
 
     // Selenium WebDriver for Web UI testing
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
 
-    // Rest Assured for API testing (exclude commons-fileupload to avoid vulnerabilities)
+    // Rest Assured for API testing (exclude vulnerable commons-fileupload transitively)
     testImplementation('io.rest-assured:rest-assured:5.3.2') {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
@@ -29,18 +29,18 @@ dependencies {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
 
-    // Safe version of Commons FileUpload (fix for WS-2019-0379)
+    // Patched Commons FileUpload (fix WS-2019-0379)
     testImplementation 'commons-fileupload:commons-fileupload:1.5'
 
-    // WebDriverManager
+    // WebDriverManager (exclude commons-fileupload just in case)
     testImplementation('io.github.bonigarcia:webdrivermanager:5.5.3') {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
 
-    // JUnit Jupiter
+    // JUnit Jupiter for Test Engine
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 
-    // SLF4J for logging
+    // SLF4J Simple for logging
     testImplementation 'org.slf4j:slf4j-simple:2.0.9'
 }
 
@@ -48,13 +48,13 @@ test {
     useJUnitPlatform()
     systemProperty 'cucumber.publish.enabled', 'false'
     jvmArgs = [
-            // Generate combined HTML & JSON reports
+            // Generate combined HTML & JSON reports when running default 'test'
             '-Dcucumber.plugin=html:build/reports/cucumber/html',
             '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
     ]
 }
 
-// Run all features via Cucumber CLI
+// Task: Run all features via Cucumber CLI
 tasks.register('runAll', Exec) {
     group = 'verification'
     description = 'Run all Cucumber features via CLI'
@@ -70,7 +70,7 @@ tasks.register('runAll', Exec) {
     ]
 }
 
-// Run Web UI tests (@web) with dedicated reports
+// Task: Run Web UI tests (@web) with dedicated reports
 tasks.register('runWebTests', Test) {
     useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@web'
@@ -80,7 +80,7 @@ tasks.register('runWebTests', Test) {
     ]
 }
 
-// Run API tests (@api) with dedicated reports
+// Task: Run API tests (@api) with dedicated reports
 tasks.register('runApiTests', Test) {
     useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@api'
