@@ -31,13 +31,14 @@ jobs:
         run: ./gradlew test --warning-mode all
 
       - name: Upload HTML report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: cucumber-html
+          name: cucumber-html-report
           path: build/reports/cucumber/html
 
       - name: Upload JSON report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: cucumber-json
+          name: cucumber-json-report
           path: build/reports/cucumber/json/cucumber.json
+
