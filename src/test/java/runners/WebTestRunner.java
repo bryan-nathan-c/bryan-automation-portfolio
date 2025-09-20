@@ -1,19 +1,16 @@
 package runners;
 
-import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
-import org.junit.runner.RunWith;
 
-@RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources/features/web",
         glue = {"stepdefinitions.web"},
         tags = "@web",
         plugin = {
                 "pretty",
-                "html:target/cucumber-reports/web",
-                "json:target/cucumber-reports/web/cucumber.json"
+                "html:build/reports/cucumber/web/html",
+                "json:build/reports/cucumber/web/json/cucumber.json"
         }
 )
-public class WebTestRunner {
-}
+public class WebTestRunner { }
+
