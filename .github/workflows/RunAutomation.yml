@@ -12,7 +12,6 @@ on:
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -44,29 +43,29 @@ jobs:
             -Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json
 
       - name: Upload Web HTML report
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: web-html-report
           path: build/reports/cucumber/web/html/index.html
 
       - name: Upload Web JSON report
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: web-json-report
           path: build/reports/cucumber/web/json/cucumber.json
 
       - name: Upload API HTML report
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: api-html-report
           path: build/reports/cucumber/api/html/index.html
 
       - name: Upload API JSON report
-        uses: actions/upload-artifact@v4
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: api-json-report
           path: build/reports/cucumber/api/json/cucumber.json
