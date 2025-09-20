@@ -10,56 +10,51 @@ repositories {
 }
 
 dependencies {
-    // Cucumber core dan binding untuk JUnit 5
+    // Cucumber core & JUnit Platform binding
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
+    // cucumber-junit tidak diperlukan lagi (hindari duplikasi)
 
-    // Cucumber JUnit Vintage (untuk runner JUnit4 jika pakai @RunWith)
-    testImplementation 'io.cucumber:cucumber-junit:7.18.0'
-
-    // Selenium WebDriver
+    // Selenium WebDriver for Web UI testing
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
 
-    dependencies {
-        // Rest Assured untuk API testing
-        testImplementation('io.rest-assured:rest-assured:5.3.2') {
-            exclude group: 'commons-fileupload', module: 'commons-fileupload'
-        }
-        testImplementation('io.rest-assured:json-path:5.3.2') {
-            exclude group: 'commons-fileupload', module: 'commons-fileupload'
-        }
-        testImplementation('io.rest-assured:xml-path:5.3.2') {
-            exclude group: 'commons-fileupload', module: 'commons-fileupload'
-        }
-        testImplementation 'commons-fileupload:commons-fileupload:1.4'
-
-        // WebDriverManager untuk otomatis download driver
-        testImplementation('io.github.bonigarcia:webdrivermanager:5.5.3') {
-            exclude group: 'commons-fileupload', module: 'commons-fileupload'
-        }
+    // Rest Assured for API testing (exclude commons-fileupload to avoid vulnerabilities)
+    testImplementation('io.rest-assured:rest-assured:5.3.2') {
+        exclude group: 'commons-fileupload', module: 'commons-fileupload'
+    }
+    testImplementation('io.rest-assured:json-path:5.3.2') {
+        exclude group: 'commons-fileupload', module: 'commons-fileupload'
+    }
+    testImplementation('io.rest-assured:xml-path:5.3.2') {
+        exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
 
-    // JUnit 5 Platform
+    // Safe version of Commons FileUpload (fix for WS-2019-0379)
+    testImplementation 'commons-fileupload:commons-fileupload:1.5'
+
+    // WebDriverManager
+    testImplementation('io.github.bonigarcia:webdrivermanager:5.5.3') {
+        exclude group: 'commons-fileupload', module: 'commons-fileupload'
+    }
+
+    // JUnit Jupiter
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 
-    // SLF4J (untuk logging Rest Assured)
+    // SLF4J for logging
     testImplementation 'org.slf4j:slf4j-simple:2.0.9'
 }
 
 test {
     useJUnitPlatform()
-    test {
-        useJUnitPlatform()
-        systemProperty 'cucumber.publish.enabled', 'false'
-        jvmArgs = [
-                '-Dcucumber.plugin=html:build/reports/cucumber/html',
-                '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
-        ]
-    }
-
+    systemProperty 'cucumber.publish.enabled', 'false'
+    jvmArgs = [
+            // Generate combined HTML & JSON reports
+            '-Dcucumber.plugin=html:build/reports/cucumber/html',
+            '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
+    ]
 }
 
-// Task untuk runner JUnit Platform (Cucumber dengan JUnit5)
+// Run all features via Cucumber CLI
 tasks.register('runAll', Exec) {
     group = 'verification'
     description = 'Run all Cucumber features via CLI'
@@ -68,13 +63,14 @@ tasks.register('runAll', Exec) {
             '-cp', sourceSets.test.runtimeClasspath.asPath,
             'io.cucumber.core.cli.Main',
             '--plugin', 'pretty',
-            '--plugin', 'html:build/reports/cucumber/all',
+            '--plugin', 'html:build/reports/cucumber/all/html',
+            '--plugin', 'json:build/reports/cucumber/all/json/cucumber.json',
             '--glue', 'stepdefinitions',
             'src/test/resources/features'
     ]
 }
 
-
+// Run Web UI tests (@web) with dedicated reports
 tasks.register('runWebTests', Test) {
     useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@web'
@@ -84,6 +80,7 @@ tasks.register('runWebTests', Test) {
     ]
 }
 
+// Run API tests (@api) with dedicated reports
 tasks.register('runApiTests', Test) {
     useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@api'
@@ -92,4 +89,3 @@ tasks.register('runApiTests', Test) {
             '-Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json'
     ]
 }
-
