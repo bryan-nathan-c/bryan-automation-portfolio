@@ -39,7 +39,6 @@ dependencies {
         }
     }
 
-
     // JUnit 5 Platform
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
 
@@ -76,14 +75,21 @@ tasks.register('runAll', Exec) {
 }
 
 
-tasks.register('runApiTests', Test) {
-    useJUnitPlatform()
-    systemProperty 'cucumber.filter.tags', '@api'
-    systemProperty 'cucumber.publish.enabled', 'false'
-}
-
 tasks.register('runWebTests', Test) {
     useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@web'
-    systemProperty 'cucumber.publish.enabled', 'false'
+    jvmArgs = [
+            '-Dcucumber.plugin=html:build/reports/cucumber/web/html',
+            '-Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json'
+    ]
 }
+
+tasks.register('runApiTests', Test) {
+    useJUnitPlatform()
+    systemProperty 'cucumber.filter.tags', '@api'
+    jvmArgs = [
+            '-Dcucumber.plugin=html:build/reports/cucumber/api/html',
+            '-Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json'
+    ]
+}
+
