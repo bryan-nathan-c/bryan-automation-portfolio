@@ -1,0 +1,55 @@
+name: CI Automation Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Chrome browser
+        uses: browser-actions/setup-chrome@v1.7.3
+
+      - name: Grant execute permission for Gradle wrapper
+        run: chmod +x gradlew
+
+      - name: Run Web UI tests
+        run: ./gradlew runWebTests -Dcucumber.filter.tags="@web"
+
+      - name: Run API tests
+        run: ./gradlew runApiTests -Dcucumber.filter.tags="@api"
+
+      - name: Generate Cucumber reports
+        run: ./gradlew test --warning-mode all
+
+      - name: Upload Web test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-report
+          path: build/reports/cucumber/html/index.html
+
+      - name: Upload API test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: api-report
+          path: build/reports/cucumber/html/index.html
+
+      - name: Upload Cucumber JSON report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cucumber-json
+          path: build/reports/cucumber/json/cucumber.json
