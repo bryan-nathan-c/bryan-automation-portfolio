@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
         tags = "@web",
         plugin = {
                 "pretty",
-                "html:build/reports/cucumber/web/html",
+                "html:build/reports/cucumber/web/index.html",
                 "json:build/reports/cucumber/web/json/cucumber.json"
         }
 )
