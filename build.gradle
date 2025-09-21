@@ -75,7 +75,7 @@ tasks.register('runAll', Exec) {
 tasks.register('runWebTests', Test) {
     systemProperty 'cucumber.filter.tags', '@web'
     jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/web/html',
+            '-Dcucumber.plugin=html:build/reports/cucumber/web/html/index.html',
             '-Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json'
     ]
     reports {
@@ -90,7 +90,7 @@ tasks.register('runWebTests', Test) {
 tasks.register('runApiTests', Test) {
     systemProperty 'cucumber.filter.tags', '@api'
     jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/api/html',
+            '-Dcucumber.plugin=html:build/reports/cucumber/api/html/index.html',
             '-Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json'
     ]
     reports {
