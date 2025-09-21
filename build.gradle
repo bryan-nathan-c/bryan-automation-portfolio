@@ -14,6 +14,7 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit:7.18.0'
+    testImplementation 'io.cucumber:cucumber-html:7.18.0'
 
     // Selenium WebDriver (no extra devtools)
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
@@ -47,7 +48,7 @@ dependencies {
 test {
     systemProperty 'cucumber.publish.enabled', 'false'
     jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/html',
+            '-Dcucumber.plugin=html:build/reports/cucumber/html/index.html',
             '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
     ]
     reports {
@@ -83,7 +84,6 @@ tasks.register('runWebTests', Test) {
     }
     include '**/WebTestRunner.class'
 }
-
 
 tasks.register('runApiTests', Test) {
     systemProperty 'cucumber.filter.tags', '@api'
