@@ -10,13 +10,12 @@ repositories {
 }
 
 dependencies {
-    // Cucumber core & JUnit Platform integration
+    // Cucumber Java & JUnit Platform integration
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
-    // Tambahkan kembali agar runner JUnit4 (@RunWith) dapat dikompilasi
     testImplementation 'io.cucumber:cucumber-junit:7.18.0'
 
-    // Selenium WebDriver
+    // Selenium WebDriver (no extra devtools)
     testImplementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
 
     // Rest Assured (exclude commons-fileupload transitif)
@@ -46,15 +45,17 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
     systemProperty 'cucumber.publish.enabled', 'false'
     jvmArgs = [
             '-Dcucumber.plugin=html:build/reports/cucumber/html',
             '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
     ]
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir('reports/tests/test'))
+    }
 }
 
-// Task runAll dengan Cucumber CLI
 tasks.register('runAll', Exec) {
     group = 'verification'
     description = 'Run all Cucumber features via CLI'
@@ -72,20 +73,30 @@ tasks.register('runAll', Exec) {
 
 // Task runWebTests (@web)
 tasks.register('runWebTests', Test) {
-    useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@web'
     jvmArgs = [
             '-Dcucumber.plugin=html:build/reports/cucumber/web/html',
             '-Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json'
     ]
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runWebTests'))
+    }
+    // Only run WebTestRunner class
+    include '**/WebTestRunner.class'
 }
 
 // Task runApiTests (@api)
 tasks.register('runApiTests', Test) {
-    useJUnitPlatform()
     systemProperty 'cucumber.filter.tags', '@api'
     jvmArgs = [
             '-Dcucumber.plugin=html:build/reports/cucumber/api/html',
             '-Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json'
     ]
+    reports {
+        html.required.set(true)
+        html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runApiTests'))
+    }
+    // Only run ApiTestRunner class
+    include '**/ApiTestRunner.class'
 }
