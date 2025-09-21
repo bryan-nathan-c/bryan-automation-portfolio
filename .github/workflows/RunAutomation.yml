@@ -28,18 +28,18 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-      - name: Run Web UI tests
+            - name: Run Web UI tests
         run: |
           ./gradlew runWebTests \
             -Dcucumber.filter.tags="@web" \
-            -Dcucumber.plugin=html:build/reports/cucumber/web/html \
+            -Dcucumber.plugin=html:build/reports/cucumber/web/html/index.html \
             -Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json
 
       - name: Run API tests
         run: |
           ./gradlew runApiTests \
             -Dcucumber.filter.tags="@api" \
-            -Dcucumber.plugin=html:build/reports/cucumber/api/html \
+            -Dcucumber.plugin=html:build/reports/cucumber/api/html/index.html \
             -Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json
 
       - name: Upload Web HTML report
