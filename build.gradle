@@ -64,7 +64,7 @@ tasks.register('runAll', Exec) {
             '-cp', sourceSets.test.runtimeClasspath.asPath,
             'io.cucumber.core.cli.Main',
             '--plugin', 'pretty',
-            '--plugin', 'html:build/reports/cucumber/all/html',
+            '--plugin', 'html:build/reports/cucumber/all/index.html',
             '--plugin', 'json:build/reports/cucumber/all/json/cucumber.json',
             '--glue', 'stepdefinitions',
             'src/test/resources/features'
