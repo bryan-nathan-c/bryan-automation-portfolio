@@ -71,7 +71,6 @@ tasks.register('runAll', Exec) {
     ]
 }
 
-// Task runWebTests (@web)
 tasks.register('runWebTests', Test) {
     systemProperty 'cucumber.filter.tags', '@web'
     jvmArgs = [
@@ -82,11 +81,10 @@ tasks.register('runWebTests', Test) {
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runWebTests'))
     }
-    // Only run WebTestRunner class
     include '**/WebTestRunner.class'
 }
 
-// Task runApiTests (@api)
+
 tasks.register('runApiTests', Test) {
     systemProperty 'cucumber.filter.tags', '@api'
     jvmArgs = [
@@ -97,6 +95,5 @@ tasks.register('runApiTests', Test) {
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runApiTests'))
     }
-    // Only run ApiTestRunner class
     include '**/ApiTestRunner.class'
 }
