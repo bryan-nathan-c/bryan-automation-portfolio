@@ -14,10 +14,6 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit:7.18.0'
-    testImplementation 'io.cucumber:cucumber-html:7.18.0'
-
-    // Selenium WebDriver (no extra devtools)
-    testImplementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
 
     // Rest Assured (exclude commons-fileupload transitif)
     testImplementation('io.rest-assured:rest-assured:5.3.2') {
@@ -44,6 +40,7 @@ dependencies {
     // SLF4J Simple
     testImplementation 'org.slf4j:slf4j-simple:2.0.9'
 }
+
 
 test {
     systemProperty 'cucumber.publish.enabled', 'false'
