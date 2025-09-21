@@ -28,7 +28,7 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-            - name: Run Web UI tests
+      - name: Run Web UI tests
         run: |
           ./gradlew runWebTests \
             -Dcucumber.filter.tags="@web" \
