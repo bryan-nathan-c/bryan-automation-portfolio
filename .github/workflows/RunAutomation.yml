@@ -42,6 +42,14 @@ jobs:
             -Dcucumber.plugin=html:build/reports/cucumber/api/html/index.html \
             -Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json
 
+      - name: List all web report files (debug)
+        if: always()
+        run: ls -lR build/reports/cucumber/web || true
+
+      - name: List all api report files (debug)
+        if: always()
+        run: ls -lR build/reports/cucumber/api || true
+
       - name: Upload Web HTML report
         if: always()
         uses: actions/upload-artifact@v4
