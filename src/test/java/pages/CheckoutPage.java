@@ -26,6 +26,7 @@ public class CheckoutPage extends BasePage {
     }
 
     public void clickFinish() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(finishButton));
         clickElement(driver.findElement(finishButton));
     }
 

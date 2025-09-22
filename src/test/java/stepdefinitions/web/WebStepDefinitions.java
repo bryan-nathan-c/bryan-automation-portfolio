@@ -30,9 +30,13 @@ public class WebStepDefinitions {
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
+        //options.addArguments("--headless");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
+        options.addArguments("--incognito");
+
+
+
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -134,7 +138,7 @@ public class WebStepDefinitions {
 
     @Then("I should see order confirmation message")
     public void iShouldSeeOrderConfirmationMessage() {
-        Assertions.assertTrue(checkoutPage.getConfirmationMessage().contains("THANK YOU FOR YOUR ORDER"),
+        Assertions.assertTrue(checkoutPage.getConfirmationMessage().contains("Thank you for your order!"),
                 "Expected order confirmation message.");
     }
 }
