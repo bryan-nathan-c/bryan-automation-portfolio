@@ -28,19 +28,22 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-      # Debug: cek apakah runner test class ter-compile
+      # Debug: check compiled test classes
       - name: List compiled test classes
         run: ls -lR build/classes/java/test || true
 
       - name: List feature files
         run: ls -lR src/test/resources/features || true
 
+      # Run Web UI tests
       - name: Run Web UI tests
         run: ./gradlew runWebTests --stacktrace
 
+      # Run API tests
       - name: Run API tests
         run: ./gradlew runApiTests --stacktrace
 
+      # Debug: list generated report files
       - name: List all web report files (debug)
         if: always()
         run: ls -lR build/reports/cucumber/web || true
@@ -49,30 +52,47 @@ jobs:
         if: always()
         run: ls -lR build/reports/cucumber/api || true
 
-      - name: Upload Web HTML report
+      # --- Upload Artifacts ---
+      # Web reports
+      - name: Upload Web HTML report (Cucumber)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: web-html-report
           path: build/reports/cucumber/web/html/index.html
 
-      - name: Upload Web JSON report
+      - name: Upload Web JSON report (Cucumber)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: web-json-report
           path: build/reports/cucumber/web/json/cucumber.json
 
-      - name: Upload API HTML report
+      - name: Upload Web Test Report (Gradle default)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-test-report
+          path: build/reports/tests/runWebTests/index.html
+
+      # API reports
+      - name: Upload API HTML report (Cucumber)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: api-html-report
           path: build/reports/cucumber/api/html/index.html
 
-      - name: Upload API JSON report
+      - name: Upload API JSON report (Cucumber)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: api-json-report
           path: build/reports/cucumber/api/json/cucumber.json
+
+      - name: Upload API Test Report (Gradle default)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-report
+          path: build/reports/tests/runApiTests/index.html
