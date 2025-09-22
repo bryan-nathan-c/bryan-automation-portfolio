@@ -10,15 +10,12 @@ repositories {
 }
 
 dependencies {
-    // Cucumber Java & JUnit Platform integration
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit:7.18.0'
 
-    // Selenium WebDriver (required on both main and test classpaths)
     implementation 'org.seleniumhq.selenium:selenium-java:4.15.0'
 
-    // Rest Assured (exclude commons-fileupload transitif)
     testImplementation('io.rest-assured:rest-assured:5.3.2') {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
@@ -29,70 +26,32 @@ dependencies {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
 
-    // Patched Commons FileUpload untuk fix WS-2019-0379
     testImplementation 'commons-fileupload:commons-fileupload:1.5'
 
-    // WebDriverManager
     testImplementation('io.github.bonigarcia:webdrivermanager:5.5.3') {
         exclude group: 'commons-fileupload', module: 'commons-fileupload'
     }
 
-    // JUnit Jupiter
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
-
-    // SLF4J Simple
     testImplementation 'org.slf4j:slf4j-simple:2.0.9'
 }
 
 test {
     systemProperty 'cucumber.publish.enabled', 'false'
-    jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/html/index.html',
-            '-Dcucumber.plugin=json:build/reports/cucumber/json/cucumber.json'
-    ]
     reports {
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir('reports/tests/test'))
     }
 }
 
-tasks.register('runAll', Exec) {
-    group = 'verification'
-    description = 'Run all Cucumber features via CLI'
-    commandLine = [
-            'java',
-            '-cp', sourceSets.test.runtimeClasspath.asPath,
-            'io.cucumber.core.cli.Main',
-            '--plugin', 'pretty',
-            '--plugin', 'html:build/reports/cucumber/all/index.html',
-            '--plugin', 'json:build/reports/cucumber/all/json/cucumber.json',
-            '--glue', 'stepdefinitions',
-            'src/test/resources/features'
-    ]
-}
-
 tasks.register('runWebTests', Test) {
+    systemProperty 'cucumber.plugin', 'pretty,html:build/reports/cucumber/web/html/index.html,json:build/reports/cucumber/web/json/cucumber.json'
     systemProperty 'cucumber.filter.tags', '@web'
-    jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/web/html/index.html',
-            '-Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json'
-    ]
-    reports {
-        html.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runWebTests'))
-    }
     include '**/WebTestRunner.class'
 }
 
 tasks.register('runApiTests', Test) {
+    systemProperty 'cucumber.plugin', 'pretty,html:build/reports/cucumber/api/html/index.html,json:build/reports/cucumber/api/json/cucumber.json'
     systemProperty 'cucumber.filter.tags', '@api'
-    jvmArgs = [
-            '-Dcucumber.plugin=html:build/reports/cucumber/api/html/index.html',
-            '-Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json'
-    ]
-    reports {
-        html.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir('reports/tests/runApiTests'))
-    }
     include '**/ApiTestRunner.class'
 }
