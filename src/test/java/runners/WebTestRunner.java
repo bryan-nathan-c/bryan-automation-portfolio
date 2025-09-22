@@ -8,6 +8,11 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = {"stepdefinitions"},
-        tags = "@web"
+        tags = "@web",
+        plugin = {
+            "pretty",
+            "html:build/reports/cucumber/web/index.html",
+            "json:build/reports/cucumber/web/cucumber.json"
+        }
 )
 public class WebTestRunner { }
