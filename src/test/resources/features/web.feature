@@ -18,7 +18,8 @@ Feature: SauceDemo Web UI Testing and Complete Checkout Flow
   @web
   Scenario: Remove product from cart
     And I login with valid credentials
-    When I go to Cart page
+    When I add product "Sauce Labs Backpack" to cart
+    And I go to Cart page
     And I remove "Sauce Labs Backpack" from cart
     Then "Sauce Labs Backpack" should not be visible in cart
 
