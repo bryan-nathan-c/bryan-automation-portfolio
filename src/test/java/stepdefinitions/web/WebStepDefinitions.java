@@ -30,17 +30,25 @@ public class WebStepDefinitions {
     public void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
-        //options.addArguments("--headless");
-        options.addArguments("--disable-gpu");
+
+        // Jalankan headless di CI (GitHub Actions)
+        options.addArguments("--headless=new");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-gpu");
         options.addArguments("--incognito");
 
-
+        // Pakai Chrome binary dari env var (CI)
+        String chromeBin = System.getenv("CHROME_BIN");
+        if (chromeBin != null) {
+            options.setBinary(chromeBin);
+        }
 
         driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
+        driver.manage().window().setSize(new org.openqa.selenium.Dimension(1920, 1080));
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
+
 
     @After("@web")
     public void tearDown() {
