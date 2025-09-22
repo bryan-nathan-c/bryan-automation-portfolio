@@ -28,19 +28,18 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
+      # Debug: cek apakah runner test class ter-compile
+      - name: List compiled test classes
+        run: ls -lR build/classes/java/test || true
+
+      - name: List feature files
+        run: ls -lR src/test/resources/features || true
+
       - name: Run Web UI tests
-        run: |
-          ./gradlew runWebTests \
-            -Dcucumber.filter.tags="@web" \
-            -Dcucumber.plugin=html:build/reports/cucumber/web/html/index.html \
-            -Dcucumber.plugin=json:build/reports/cucumber/web/json/cucumber.json
+        run: ./gradlew runWebTests --stacktrace
 
       - name: Run API tests
-        run: |
-          ./gradlew runApiTests \
-            -Dcucumber.filter.tags="@api" \
-            -Dcucumber.plugin=html:build/reports/cucumber/api/html/index.html \
-            -Dcucumber.plugin=json:build/reports/cucumber/api/json/cucumber.json
+        run: ./gradlew runApiTests --stacktrace
 
       - name: List all web report files (debug)
         if: always()
